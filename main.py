@@ -101,6 +101,11 @@ def searchRecordByLocation():
 ## HTTP POST - Create Record
 @app.route("/add", methods=['POST'])
 def addRecord():
+
+    api_key = request.args.get("api-key")
+    if api_key != "TopSecretAPIKey":
+        return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."}), 403
+
     new_cafe = Cafe(
         name=request.form.get("name"),
         map_url=request.form.get("map_url"),
@@ -115,7 +120,7 @@ def addRecord():
     )
     db.session.add(new_cafe)
     db.session.commit()
-    return jsonify(response={"success": "Successfully added the new cafe."})
+    return jsonify(response={"success": "Successfully added the new cafe."}), 200
 
 ## HTTP PUT/PATCH - Update Record
 ## https://gist.github.com/angelabauer/dbae77d766cf51942b0c8852fd8470a3
